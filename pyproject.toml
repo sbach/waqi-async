@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "waqi-client-async"
+version = "1.0.0"
+description = "An asynchronous client to query data from the World Air Quality Index project (aqicn.org, waqi.info)."
+
+license = "MIT"
+authors = ["Stanislas Bach <sbach@0g.re>"]
+readme = "README.md"
+
+homepage = "https://github.com/sbach/waqi-client-async"
+repository = "https://github.com/sbach/waqi-client-async"
+documentation = "https://github.com/sbach/waqi-client-async"
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+aiohttp = "^3.8.3"
+
+[tool.poetry.dev-dependencies]
+black = "^22.10.0"
+flake8 = "^5.0.4"
+flake8-black = "^0.3.3"
+pytest = "^7.2.0"
+pytest-asyncio = "^0.20.1"
+mypy = "^0.982"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.masonry.api"
