@@ -48,8 +48,12 @@ class UnknownStation(APIError):
 
 
 def assert_valid(result: dict) -> None:
-    if result.get("status") != "error":
-        return
+    if result.get("status") == "ok":
+        if data := result.get("data") is not None:
+            if data.get("msg") == "Unknown ID":
+                raise UnknownID()
+                
+    return
 
     message = result.get("msg")
     if message == "Invalid key":
@@ -58,8 +62,6 @@ def assert_valid(result: dict) -> None:
         raise OverQuota()
     elif message == "Unknown city":
         raise UnknownCity()
-    elif message == "Unknown ID":
-        raise UnknownID()
     elif message:
         raise APIError(message)
 
