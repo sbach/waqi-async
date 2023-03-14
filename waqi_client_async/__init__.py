@@ -6,6 +6,9 @@ from aiohttp import ClientSession
 from types import TracebackType
 from typing import Any, Optional, Type
 
+import logging
+LOGGER = logging.getLogger(__name__)
+
 BASE_URL = "https://api.waqi.info/"
 FEED_URL = BASE_URL + "feed/{}/"
 SEARCH_URL = BASE_URL + "search/"
@@ -48,6 +51,7 @@ class UnknownStation(APIError):
 
 
 def assert_valid(result: dict) -> None:
+    LOGGER.debug("JSON Data: %s", result)
     if result.get("status") == "ok":
         if data := result.get("data") is not None:
             if data.get("msg") == "Unknown ID":
