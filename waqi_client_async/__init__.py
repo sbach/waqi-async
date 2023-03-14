@@ -29,6 +29,18 @@ class OverQuota(APIError):
     pass
 
 
+class UnknownCity(APIError):
+    """Raised when the provided city could not be found."""
+    
+    pass
+
+
+class UnknownID(APIError):
+    """Raised when the provided ID could not be found."""
+    
+    pass
+
+
 class UnknownStation(APIError):
     """Raised when the provided station could not be found."""
 
@@ -39,19 +51,25 @@ def assert_valid(result: dict) -> None:
     if result.get("status") != "error":
         return
 
-    data = result.get("data")
-    if data == "Invalid key":
+    message = result.get("msg")
+    if message == "Invalid key":
         raise InvalidToken()
-    elif data == "Over quota":
+    elif message == "Over quota":
         raise OverQuota()
-    elif data == "Unknown station":
-        raise UnknownStation()
-    elif data:
-        raise APIError(data)
-
-    message = result.get("message")
-    if message:
+    elif message == "Unknown city":
+        raise UnknownCity()
+    elif message == "Unknown ID":
+        raise UnknownID()
+    elif message:
         raise APIError(message)
+
+    keyword = result.get("keyword")
+    if keyword == "no_matching_stations_found": 
+        raise APIError(keyword)
+
+    data = result.get("data")
+    if data == "no such station":
+        raise UnknownStation()
 
 
 class WAQIClient:
