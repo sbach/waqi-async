@@ -7,6 +7,7 @@ from types import TracebackType
 from typing import Any, Optional, Type
 
 import logging
+
 LOGGER = logging.getLogger(__name__)
 
 BASE_URL = "https://api.waqi.info/"
@@ -34,13 +35,13 @@ class OverQuota(APIError):
 
 class UnknownCity(APIError):
     """Raised when the provided city could not be found."""
-    
+
     pass
 
 
 class UnknownID(APIError):
     """Raised when the provided ID could not be found."""
-    
+
     pass
 
 
@@ -56,7 +57,7 @@ def assert_valid(result: dict) -> None:
         if data := result.get("data") is not None:
             if data.get("msg") == "Unknown ID":
                 raise UnknownID()
-                
+
     return
 
     message = result.get("msg")
@@ -70,7 +71,7 @@ def assert_valid(result: dict) -> None:
         raise APIError(message)
 
     keyword = result.get("keyword")
-    if keyword == "no_matching_stations_found": 
+    if keyword == "no_matching_stations_found":
         raise APIError(keyword)
 
     data = result.get("data")
