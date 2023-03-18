@@ -119,7 +119,7 @@ class WAQIClient:
             async with self._session.get(
                 path, params=dict(self._params, **kwargs), timeout=TIMEOUT
              ) as r:
-        except ClientError as err:
+        except aiohttp.ClientError as err:
             raise ConnectionFailed("Connection to API failed")
         except asyncio.TimeoutError as err:
             raise TimeoutError("Connection to API timed out")
