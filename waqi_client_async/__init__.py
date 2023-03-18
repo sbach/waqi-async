@@ -73,7 +73,7 @@ def assert_valid(result: dict) -> None:
 
     # no status in result, look for specific feed-search error
     elif "Invalid key" in result["rxs"]["obs"][0]["msg"]:
-        raise UnknownID
+        raise InvalidToken()
 
 
 class WAQIClient:
