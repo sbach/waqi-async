@@ -13,7 +13,7 @@ from .exceptions import (
     ConnectionFailed,
     InvalidToken,
     OverQuota,
-    TimeoutError.
+    TimeoutError,
     UnknownCity,
     UnknownID,
 )
