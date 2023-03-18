@@ -12,7 +12,7 @@ repository = "https://github.com/sbach/waqi-client-async"
 documentation = "https://github.com/sbach/waqi-client-async"
 
 [tool.poetry.dependencies]
-python = ">=3.7"
+python = ">=3.8"
 aiohttp = "^3.8.3"
 
 [tool.poetry.dev-dependencies]
