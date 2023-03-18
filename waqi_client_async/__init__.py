@@ -46,7 +46,6 @@ class UnknownID(APIError):
 
 
 def assert_valid(result: dict) -> None:
-    LOGGER.debug("JSON Data: %s", result)
     if status := result.get("status") is not None:
         if status == "ok":
             if data := result.get("data") is not None:
@@ -108,6 +107,7 @@ class WAQIClient:
             result = await r.json()
             if not isinstance(result, dict):
                 raise TypeError("JSON response was decoded to an unsupported type")
+            LOGGER.debug("JSON Data: %s", result)
             assert_valid(result)
             return result["data"]
 
