@@ -2,7 +2,7 @@
 the World Air Quality Index project (aqicn.org, waqi.info).
 """
 
-from aiohttp import ClientSession
+from aiohttp import ClientError, ClientSession
 from types import TracebackType
 from typing import Any, Optional, Type
 
@@ -119,7 +119,7 @@ class WAQIClient:
             async with self._session.get(
                 path, params=dict(self._params, **kwargs), timeout=TIMEOUT
              ) as r:
-        except aiohttp.ClientError as err:
+        except ClientError as err:
             raise ConnectionFailed("Connection to API failed")
         except asyncio.TimeoutError as err:
             raise TimeoutError("Connection to API timed out")
