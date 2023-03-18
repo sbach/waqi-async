@@ -8,54 +8,22 @@ from typing import Any, Optional, Type
 
 import logging
 
+from .exceptions import (
+    APIError,
+    ConnectionFailed,
+    InvalidToken,
+    OverQuota,
+    TimeoutError.
+    UnknownCity,
+    UnknownID,
+)
+
 LOGGER = logging.getLogger(__name__)
 
 BASE_URL = "https://api.waqi.info/"
 FEED_URL = BASE_URL + "feed/{}/"
 SEARCH_URL = BASE_URL + "search/"
 TIMEOUT = 30
-
-
-class APIError(Exception):
-    """Base class for exceptions from the WAQI API."""
-
-    pass
-
-
-class ConnectionFailed(APIError):
-    """Raised when connecting to the API fails."""
-
-    pass
-
-
-class InvalidToken(APIError):
-    """Raised when the provided API token is invalid."""
-
-    pass
-
-
-class OverQuota(APIError):
-    """Raised when the API token used reached its quota."""
-
-    pass
-
-
-class TimeoutError(APIError):
-    """Raised when connecting to the API times out."""
-
-    pass
-
-
-class UnknownCity(APIError):
-    """Raised when the provided city could not be found."""
-
-    pass
-
-
-class UnknownID(APIError):
-    """Raised when the provided ID could not be found."""
-
-    pass
 
 
 def assert_valid(result: dict) -> None:
