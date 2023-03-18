@@ -13,10 +13,16 @@ LOGGER = logging.getLogger(__name__)
 BASE_URL = "https://api.waqi.info/"
 FEED_URL = BASE_URL + "feed/{}/"
 SEARCH_URL = BASE_URL + "search/"
-
+TIMEOUT = 30
 
 class APIError(Exception):
     """Base class for exceptions from the WAQI API."""
+
+    pass
+
+
+class ConnectionFailed(APIError):
+    """Raised when connecting to the API fails."""
 
     pass
 
@@ -32,6 +38,11 @@ class OverQuota(APIError):
 
     pass
 
+
+class TimeoutError(APIError):
+    """Raised when connecting to the API times out."""
+
+    pass
 
 class UnknownCity(APIError):
     """Raised when the provided city could not be found."""
@@ -81,10 +92,11 @@ class WAQIClient:
 
     def __init__(self, token: str, session: Optional[ClientSession] = None) -> None:
         self._params = {"token": token}
+        timeout = aiohttp.ClientTimeout(total=TIMEOUT)
         if session:
             self._session = session
         else:
-            self._session = ClientSession(raise_for_status=True)
+            self._session = ClientSession(timeout=timeout, raise_for_status=True)
 
     async def __aenter__(self):
         return self
@@ -103,13 +115,21 @@ class WAQIClient:
 
     async def get(self, path: str, **kwargs: Any) -> dict:
         """Call the WAQI API and return the resulting data (and potiential errors)."""
-        async with self._session.get(path, params=dict(self._params, **kwargs)) as r:
-            result = await r.json()
-            if not isinstance(result, dict):
-                raise TypeError("JSON response was decoded to an unsupported type")
-            LOGGER.debug("JSON Data: %s", result)
-            assert_valid(result)
-            return result["data"]
+        try:
+            async with self._session.get(
+                path, params=dict(self._params, **kwargs), timeout=TIMEOUT
+             ) as r:
+        except ClientError as err:
+            raise ConnectionFailed("Connection to API failed")
+        except asyncio.TimeoutError as err:
+            raise TimeoutError("Connection to API timed out")
+
+        result = await r.json()
+        if not isinstance(result, dict):
+            raise TypeError("JSON response was decoded to an unsupported type")
+        LOGGER.debug("JSON Data: %s", result)
+        assert_valid(result)
+        return result["data"]
 
     async def feed(self, station: str) -> dict:
         """Get the latest information of the given station."""
