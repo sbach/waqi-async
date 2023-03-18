@@ -65,8 +65,8 @@ def assert_valid(result: dict) -> None:
                 if data == "Invalid key":
                     raise InvalidToken()
                 if data == "Over quota":
-                    raise OverQuota()    
-                # unknown data for status = error    
+                    raise OverQuota()
+                # unknown data for status = error
                 raise APIError(data)
 
         # unknown status in result
