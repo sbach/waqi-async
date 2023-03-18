@@ -53,30 +53,22 @@ class UnknownStation(APIError):
 
 def assert_valid(result: dict) -> None:
     LOGGER.debug("JSON Data: %s", result)
-    if result.get("status") == "ok":
-        if data := result.get("data") is not None:
-            if data.get("msg") == "Unknown ID":
-                raise UnknownID()
-
+    if result.get("status") != "error":
         return
 
-    message = result.get("msg")
-    if message == "Invalid key":
-        raise InvalidToken()
-    elif message == "Over quota":
-        raise OverQuota()
-    elif message == "Unknown city":
-        raise UnknownCity()
-    elif message:
-        raise APIError(message)
-
-    keyword = result.get("keyword")
-    if keyword == "no_matching_stations_found":
-        raise APIError(keyword)
-
     data = result.get("data")
-    if data == "no such station":
+    if data == "Invalid key":
+        raise InvalidToken()
+    elif data == "Over quota":
+        raise OverQuota()
+    elif data == "Unknown station":
         raise UnknownStation()
+    elif data:
+        raise APIError(data)
+
+    message = result.get("message")
+    if message:
+        raise APIError(message)
 
 
 class WAQIClient:
