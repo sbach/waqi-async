@@ -2,7 +2,7 @@
 the World Air Quality Index project (aqicn.org, waqi.info).
 """
 
-from aiohttp import ClientError, ClientSession
+from aiohttp import ClientError, ClientResponse, ClientSession, ClientTimeout
 from types import TracebackType
 from typing import Any, Optional, Type
 
@@ -91,8 +91,9 @@ class WAQIClient:
     """World Air Quality Index API Client."""
 
     def __init__(self, token: str, session: Optional[ClientSession] = None) -> None:
+        timeout = ClientTimeout(total=TIMEOUT)
         self._params = {"token": token}
-        timeout = aiohttp.ClientTimeout(total=TIMEOUT)
+
         if session:
             self._session = session
         else:
@@ -115,16 +116,18 @@ class WAQIClient:
 
     async def get(self, path: str, **kwargs: Any) -> dict:
         """Call the WAQI API and return the resulting data (and potiential errors)."""
+        resp: ClientResponse
+
         try:
             async with self._session.get(
                 path, params=dict(self._params, **kwargs), timeout=TIMEOUT
-             ) as r:
+             ) as resp:
         except ClientError as err:
             raise ConnectionFailed("Connection to API failed")
         except asyncio.TimeoutError as err:
             raise TimeoutError("Connection to API timed out")
 
-        result = await r.json()
+        result = await resp.json()
         if not isinstance(result, dict):
             raise TypeError("JSON response was decoded to an unsupported type")
         LOGGER.debug("JSON Data: %s", result)
