@@ -47,7 +47,7 @@ class UnknownID(APIError):
 
 def assert_valid(result: dict) -> None:
     LOGGER.debug("JSON Data: %s", result)
-    if status: = result.get("status") is not None:
+    if status := result.get("status") is not None:
         if status == "ok":
             if data := result.get("data") is not None:
                 if not data:
