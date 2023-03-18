@@ -58,7 +58,7 @@ def assert_valid(result: dict) -> None:
             if data.get("msg") == "Unknown ID":
                 raise UnknownID()
 
-    return
+        return
 
     message = result.get("msg")
     if message == "Invalid key":
