@@ -46,10 +46,10 @@ class UnknownID(APIError):
 
 
 def assert_valid(result: dict) -> None:
-    if status := result.get("status") is not None:
+    if (status := result.get("status")) is not None:
         LOGGER.debug("status: %s", status)
         if status == "ok":
-            if data := result.get("data") is not None:
+            if (data := result.get("data")) is not None:
                 # data = []
                 if not data:
                     raise UnknownCity()
@@ -61,7 +61,7 @@ def assert_valid(result: dict) -> None:
             raise APIError(result)
 
         if status == "error":
-            if data := result.get("data") is not None:
+            if (data := result.get("data")) is not None:
                 if data == "Invalid key":
                     raise InvalidToken()
                 if data == "Over quota":
