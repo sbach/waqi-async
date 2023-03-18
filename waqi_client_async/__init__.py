@@ -122,14 +122,14 @@ class WAQIClient:
             async with self._session.get(
                 path, params=dict(self._params, **kwargs), timeout=TIMEOUT
              ) as resp:
+            result = await resp.json()
+            if not isinstance(result, dict):
+                raise TypeError("JSON response was decoded to an unsupported type")
         except ClientError as err:
             raise ConnectionFailed("Connection to API failed")
         except asyncio.TimeoutError as err:
             raise TimeoutError("Connection to API timed out")
 
-        result = await resp.json()
-        if not isinstance(result, dict):
-            raise TypeError("JSON response was decoded to an unsupported type")
         LOGGER.debug("JSON Data: %s", result)
         assert_valid(result)
         return result["data"]
