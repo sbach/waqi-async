@@ -50,25 +50,29 @@ def assert_valid(result: dict) -> None:
     if status := result.get("status") is not None:
         if status == "ok":
             if data := result.get("data") is not None:
+                # data = []
                 if not data:
                     raise UnknownCity()
-                elif data.get("msg") == "Unknown ID":
+                if data.get("msg") == "Unknown ID":
                     raise UnknownID()
                 return
-            else:
-                raise APIError(data)
+
+            # no data in result:
+            raise APIError(result)
 
         if status == "error":
             if data := result.get("data") is not None:
                 if data == "Invalid key":
                     raise InvalidToken()
-                elif data == "Over quota":
-                    raise OverQuota()
-                elif data:
-                    raise APIError(data)
+                if data == "Over quota":
+                    raise OverQuota()    
+                # unknown data for status = error    
+                raise APIError(data)
 
+        # unknown status in result
         raise APIError(status)
 
+    # no status in result, look for specific feed-search error
     elif "Invalid key" in result["rxs"]["obs"][0]["msg"]:
         raise UnknownID
 
