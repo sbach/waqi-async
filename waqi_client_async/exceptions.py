@@ -1,5 +1,6 @@
 """WAQI API exceptions"""
 
+
 class APIError(Exception):
     """Base class for exceptions from the WAQI API."""
 
