@@ -15,6 +15,7 @@ FEED_URL = BASE_URL + "feed/{}/"
 SEARCH_URL = BASE_URL + "search/"
 TIMEOUT = 30
 
+
 class APIError(Exception):
     """Base class for exceptions from the WAQI API."""
 
@@ -43,6 +44,7 @@ class TimeoutError(APIError):
     """Raised when connecting to the API times out."""
 
     pass
+
 
 class UnknownCity(APIError):
     """Raised when the provided city could not be found."""
@@ -121,7 +123,7 @@ class WAQIClient:
         try:
             async with self._session.get(
                 path, params=dict(self._params, **kwargs), timeout=TIMEOUT
-             ) as resp:
+            ) as resp:
                 result = await resp.json()
                 if not isinstance(result, dict):
                     raise TypeError("JSON response was decoded to an unsupported type")
