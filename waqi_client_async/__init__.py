@@ -26,7 +26,7 @@ SEARCH_URL = BASE_URL + "search/"
 TIMEOUT = 30
 
 
-def assert_valid(result: dict) -> None:
+def assert_valid(result: dict[str, Any]) -> None:
     if (status := result.get("status")) is not None:
         if status == "ok":
             if (data := result.get("data")) is not None:
@@ -84,7 +84,7 @@ class WAQIClient:
         """Close the client's session."""
         await self._session.close()
 
-    async def get(self, path: str, **kwargs: Any) -> dict:
+    async def get(self, path: str, **kwargs: Any) -> dict[str, Any]:
         """Call the WAQI API and return the resulting data (and potiential errors)."""
         resp: ClientResponse
 
@@ -104,10 +104,10 @@ class WAQIClient:
         assert_valid(result)
         return result["data"]
 
-    async def feed(self, station: str) -> dict:
+    async def feed(self, station: str) -> dict[str, Any]:
         """Get the latest information of the given station."""
         return await self.get(FEED_URL.format(station))
 
-    async def search(self, keyword: str) -> dict:
+    async def search(self, keyword: str) -> dict[str, Any]:
         """Search for stations by name."""
         return await self.get(SEARCH_URL, keyword=keyword)
