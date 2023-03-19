@@ -2,12 +2,11 @@
 the World Air Quality Index project (aqicn.org, waqi.info).
 """
 import asyncio
+import logging
 
-from aiohttp import ClientError, ClientResponse, ClientSession, ClientTimeout
 from types import TracebackType
 from typing import Any, Optional, Type
-
-import logging
+from aiohttp import ClientError, ClientResponse, ClientSession, ClientTimeout
 
 from .const import BASE_URL, SEARCH_URL, TIMEOUT
 from .helper import assert_valid

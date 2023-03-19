@@ -12,6 +12,7 @@ from .exceptions import (
 
 
 def assert_valid(result: dict[str, Any]) -> None:
+    "Helper function for error-handling."
     if (status := result.get("status")) is not None:
         if status == "ok":
             if (data := result.get("data")) is not None:
@@ -38,5 +39,5 @@ def assert_valid(result: dict[str, Any]) -> None:
         raise APIError(status)
 
     # no status in result, look for specific feed-search error
-    elif "Invalid key" in result["rxs"]["obs"][0]["msg"]:
+    if "Invalid key" in result["rxs"]["obs"][0]["msg"]:
         raise InvalidToken()
