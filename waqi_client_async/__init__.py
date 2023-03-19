@@ -8,7 +8,7 @@ from typing import Any, Optional, Type
 
 import logging
 
-from .const import FEED_URL, SEARCH_URL, TIMEOUT
+from .const import BASE_URL, SEARCH_URL, TIMEOUT
 from .helper import assert_valid
 from .exceptions import ConnectionFailed, TimeoutError
 
@@ -62,9 +62,9 @@ class WAQIClient:
         assert_valid(result)
         return result["data"]
 
-    async def feed(self, station: str) -> dict[str, Any]:
+    async def feed(self, station_id: str) -> dict[str, Any]:
         """Get the latest information of the given station."""
-        return await self.get(FEED_URL.format(station))
+        return await self.get(f"BASE_URL/feed/{station_id}/")
 
     async def search(self, keyword: str) -> dict[str, Any]:
         """Search for stations by name."""
