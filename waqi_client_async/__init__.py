@@ -8,15 +8,9 @@ from typing import Any, Optional, Type
 
 import logging
 
-from .exceptions import (
-    APIError,
-    ConnectionFailed,
-    InvalidToken,
-    OverQuota,
-    TimeoutError,
-    UnknownCity,
-    UnknownID,
-)
+from .helper import assert_valid
+
+from .exceptions import ConnectionFailed, TimeoutError
 
 LOGGER = logging.getLogger(__name__)
 
@@ -24,37 +18,6 @@ BASE_URL = "https://api.waqi.info/"
 FEED_URL = BASE_URL + "feed/{}/"
 SEARCH_URL = BASE_URL + "search/"
 TIMEOUT = 30
-
-
-def assert_valid(result: dict[str, Any]) -> None:
-    if (status := result.get("status")) is not None:
-        if status == "ok":
-            if (data := result.get("data")) is not None:
-                # data = []
-                if not data:
-                    raise UnknownCity()
-                if data.get("msg") == "Unknown ID":
-                    raise UnknownID()
-                return
-
-            # no data in result:
-            raise APIError(result)
-
-        if status == "error":
-            if (data := result.get("data")) is not None:
-                if data == "Invalid key":
-                    raise InvalidToken()
-                if data == "Over quota":
-                    raise OverQuota()
-                # unknown data for status = error
-                raise APIError(data)
-
-        # unknown status in result
-        raise APIError(status)
-
-    # no status in result, look for specific feed-search error
-    elif "Invalid key" in result["rxs"]["obs"][0]["msg"]:
-        raise InvalidToken()
 
 
 class WAQIClient:
