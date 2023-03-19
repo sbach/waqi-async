@@ -64,7 +64,7 @@ class WAQIClient:
 
     async def feed(self, station_id: str) -> dict[str, Any]:
         """Get the latest information of the given station."""
-        return await self.get(BASE_URL + f"{station_id}/")
+        return await self.get(BASE_URL + f"feed/{station_id}/")
 
     async def search(self, keyword: str) -> dict[str, Any]:
         """Search for stations by name."""
