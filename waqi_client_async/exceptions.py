@@ -17,7 +17,7 @@ class OverQuota(APIError):
     """Raised when the API token used reached its quota."""
 
 
-class TimeoutError(APIError):
+class WaqiTimeoutError(APIError):
     """Raised when connecting to the API times out."""
 
 

@@ -1,6 +1,7 @@
 """An asynchronous client to query data from
 the World Air Quality Index project (aqicn.org, waqi.info).
 """
+import asyncio
 
 from aiohttp import ClientError, ClientResponse, ClientSession, ClientTimeout
 from types import TracebackType
@@ -10,7 +11,7 @@ import logging
 
 from .const import BASE_URL, SEARCH_URL, TIMEOUT
 from .helper import assert_valid
-from .exceptions import ConnectionFailed, TimeoutError
+from .exceptions import ConnectionFailed, WaqiTimeoutError
 
 LOGGER = logging.getLogger(__name__)
 
@@ -54,9 +55,9 @@ class WAQIClient:
                 if not isinstance(result, dict):
                     raise TypeError("JSON response was decoded to an unsupported type")
         except ClientError as err:
-            raise ConnectionFailed("Connection to API failed")
+            raise ConnectionFailed("Connection to API failed") from err
         except asyncio.TimeoutError as err:
-            raise TimeoutError("Connection to API timed out")
+            raise WaqiTimeoutError("Connection to API timed out") from err
 
         LOGGER.debug("JSON Data: %s", result)
         assert_valid(result)
