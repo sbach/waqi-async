@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "waqi-client-async"
-version = "1.0.3a7"
+version = "1.0.3a8"
 description = "An asynchronous client to query data from the World Air Quality Index project (aqicn.org, waqi.info)."
 
 license = "MIT"
