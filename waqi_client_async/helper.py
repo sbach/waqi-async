@@ -10,6 +10,7 @@ from .exceptions import (
     UnknownID,
 )
 
+
 def assert_valid(result: dict[str, Any]) -> None:
     if (status := result.get("status")) is not None:
         if status == "ok":
