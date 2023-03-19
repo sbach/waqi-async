@@ -8,7 +8,7 @@ from types import TracebackType
 from typing import Any, Optional, Type
 from aiohttp import ClientError, ClientResponse, ClientSession, ClientTimeout
 
-from .const import BASE_URL, FEED_URL, SEARCH_URL, TIMEOUT
+from .const import BASE_URL, SEARCH_URL, TIMEOUT
 from .helper import assert_valid
 from .exceptions import ConnectionFailed, WaqiTimeoutError
 
@@ -64,7 +64,7 @@ class WAQIClient:
 
     async def feed(self, station_id: str) -> dict[str, Any]:
         """Get the latest information of the given station."""
-        return await self.get(FEED_URL.format(station_id))
+        return await self.get(BASE_URL + f"{station_id}/")
 
     async def search(self, keyword: str) -> dict[str, Any]:
         """Search for stations by name."""
