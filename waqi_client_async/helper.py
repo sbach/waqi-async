@@ -39,5 +39,6 @@ def assert_valid(result: dict[str, Any]) -> None:
         raise APIError(status)
 
     # no status in result, look for specific feed-search error
-    if "Invalid key" in result["rxs"]["obs"][0]["msg"]:
+    obs_list: list[dict[str, str]] = result["rxs"]["obs"]
+    if "Invalid key" in obs_list[0]["msg"]:
         raise InvalidToken()
