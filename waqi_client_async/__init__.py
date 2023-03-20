@@ -5,7 +5,7 @@ import asyncio
 import logging
 
 from types import TracebackType
-from typing import Any, Optional, Type
+from typing import Any, Dict, Optional, Type
 from aiohttp import ClientError, ClientResponse, ClientSession, ClientTimeout
 
 from .const import BASE_URL, SEARCH_URL, TIMEOUT
@@ -42,16 +42,16 @@ class WAQIClient:
         """Close the client's session."""
         await self._session.close()
 
-    async def get(self, path: str, **kwargs: Any) -> dict[str, Any]:
+    async def get(self, path: str, **kwargs: Any) -> Dict[str, Any]:
         """Call the WAQI API and return the resulting data (and potiential errors)."""
         resp: ClientResponse
 
         try:
             async with self._session.get(
-                path, params=dict(self._params, **kwargs), timeout=TIMEOUT
+                path, params=Dict(self._params, **kwargs), timeout=TIMEOUT
             ) as resp:
                 result = await resp.json()
-                if not isinstance(result, dict):
+                if not isinstance(result, Dict):
                     raise TypeError("JSON response was decoded to an unsupported type")
         except ClientError as err:
             raise ConnectionFailed("Connection to API failed") from err
@@ -62,10 +62,10 @@ class WAQIClient:
         assert_valid(result)
         return result["data"]
 
-    async def feed(self, station_id: str) -> dict[str, Any]:
+    async def feed(self, station_id: str) -> Dict[str, Any]:
         """Get the latest information of the given station."""
         return await self.get(BASE_URL + f"feed/{station_id}/")
 
-    async def search(self, keyword: str) -> dict[str, Any]:
+    async def search(self, keyword: str) -> Dict[str, Any]:
         """Search for stations by name."""
         return await self.get(SEARCH_URL, keyword=keyword)

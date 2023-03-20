@@ -1,6 +1,6 @@
 """ Waqi-client-async helper functions."""
 
-from typing import Any
+from typing import Any, Dict
 
 from .exceptions import (
     APIError,
@@ -11,7 +11,7 @@ from .exceptions import (
 )
 
 
-def assert_valid(result: dict[str, Any]) -> None:
+def assert_valid(result: Dict[str, Any]) -> None:
     "Helper function for error-handling."
     if (status := result.get("status")) is not None:
         if status == "ok":
@@ -39,6 +39,6 @@ def assert_valid(result: dict[str, Any]) -> None:
         raise APIError(status)
 
     # no status in result, look for specific feed-search error
-    obs_list: list[dict[str, str]] = result["rxs"]["obs"]
+    obs_list: list[Dict[str, str]] = result["rxs"]["obs"]
     if "Invalid key" in obs_list[0]["msg"]:
         raise InvalidToken()
